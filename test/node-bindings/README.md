@@ -33,10 +33,12 @@ obs.checkScreenPermission();    // macOS only
 obs.requestScreenPermission();  // macOS only
 
 obs.init();                     // start OBS core
-// TODO: create sources/outputs and start recording
+obs.startRecording('/tmp/output.mp4');
+// ... wait some time ...
+obs.stopRecording();
 obs.shutdown();                 // clean up
 ```
 
-The actual screen recording pipeline is not implemented here. These bindings
-are meant to serve as groundwork for a full npm package built on top of
-`libobs`.
+`startRecording` will create a simple screen capture source, H.264/AAC
+encoders and an `ffmpeg_muxer` output writing to the given file path.
+Only very basic settings are currently used.
