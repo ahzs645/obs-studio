@@ -33,12 +33,21 @@ obs.checkScreenPermission();    // macOS only
 obs.requestScreenPermission();  // macOS only
 
 obs.init();                     // start OBS core
-obs.startRecording('/tmp/output.mp4');
+// choose display or window via options
+const displays = obs.listDisplays();
+const windows = obs.listWindows();
+obs.startRecording('/tmp/output.mp4', {
+  displayId: displays[0].id, // or windowId: windows[0].id
+  width: 1920,
+  height: 1080,
+  fps: 60
+});
 // ... wait some time ...
 obs.stopRecording();
 obs.shutdown();                 // clean up
 ```
 
-`startRecording` will create a simple screen capture source, H.264/AAC
-encoders and an `ffmpeg_muxer` output writing to the given file path.
-Only very basic settings are currently used.
+`listDisplays()` and `listWindows()` enumerate available screen sources on the
+current platform. `startRecording(path, options)` now accepts a second argument
+to specify recording width/height, fps and which display or window to capture.
+Settings still use simple defaults for encoding.

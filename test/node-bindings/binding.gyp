@@ -7,7 +7,17 @@
       ],
       "conditions": [
         ["OS=='mac'", {
-          "sources": ["src/permission_manager.mm"]
+          "sources": ["src/permission_manager.mm"],
+          "libraries": [
+            "-framework Cocoa",
+            "-framework CoreGraphics"
+          ]
+        }],
+        ["OS=='linux'", {
+          "libraries": ["-lX11", "-lXrandr"]
+        }],
+        ["OS=='win'", {
+          "libraries": ["-lgdi32"]
         }]
       ],
       "include_dirs": [
