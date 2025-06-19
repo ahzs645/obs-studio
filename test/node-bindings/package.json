@@ -1,0 +1,14 @@
+{
+  "name": "obs-screen-capture",
+  "version": "0.1.0",
+  "description": "Prototype bindings for OBS based screen capture",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/test-linux.js"
+  },
+  "gypfile": true,
+  "dependencies": {
+    "node-addon-api": "^7.0.0",
+    "bindings": "^1.5.0"
+  }
+}
