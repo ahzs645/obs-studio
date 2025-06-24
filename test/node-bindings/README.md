@@ -47,6 +47,8 @@ obs.stopRecording();
 obs.shutdown();                 // clean up
 ```
 
+Audio is captured from the system's default output device on all platforms.
+
 `listDisplays()` and `listWindows()` enumerate available screen sources on the
 current platform. `startRecording(path, options)` now accepts a second argument
 to specify recording width/height, fps and which display or window to capture.

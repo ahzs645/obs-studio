@@ -15,9 +15,11 @@
 static bool initialized = false;
 static bool recording = false;
 static obs_source_t *capture_source = nullptr;
+static obs_source_t *audio_source = nullptr;
 static obs_output_t *file_output = nullptr;
 static obs_encoder_t *video_encoder = nullptr;
 static obs_encoder_t *audio_encoder = nullptr;
+static obs_scene_t *scene = nullptr;
 
 Napi::String ObsVersion(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
@@ -52,6 +54,14 @@ static void release_recording_objects()
   if (capture_source) {
     obs_source_release(capture_source);
     capture_source = nullptr;
+  }
+  if (audio_source) {
+    obs_source_release(audio_source);
+    audio_source = nullptr;
+  }
+  if (scene) {
+    obs_scene_release(scene);
+    scene = nullptr;
   }
   if (file_output) {
     obs_output_release(file_output);
@@ -165,8 +175,24 @@ Napi::Boolean StartRecording(const Napi::CallbackInfo& info)
     return Napi::Boolean::New(env, false);
   }
 
-  obs_scene_t *scene = obs_scene_create("scene");
+  scene = obs_scene_create("scene");
   obs_scene_add(scene, capture_source);
+
+  const char *audio_id =
+#if defined(_WIN32)
+      "wasapi_output_capture";
+#elif defined(__APPLE__)
+      "coreaudio_output_capture";
+#else
+      "pulse_output_capture";
+#endif
+  obs_data_t *a_source_settings = obs_data_create();
+  obs_data_set_string(a_source_settings, "device_id", "default");
+  audio_source = obs_source_create(audio_id, "audio", a_source_settings, nullptr);
+  obs_data_release(a_source_settings);
+  if (audio_source)
+    obs_scene_add(scene, audio_source);
+
   obs_source_t *scene_source = obs_scene_get_source(scene);
 
   obs_data_t *vsettings = obs_data_create();
