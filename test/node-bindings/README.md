@@ -7,13 +7,24 @@ implemented as a proof of concept.
 
 ## Building
 
+### Using CMake (fetches OBS automatically)
+
+The provided `CMakeLists.txt` downloads OBS Studio and builds `libobs`
+before compiling the Node addon. This can take a while on the first run.
+
+```
+mkdir build && cd build
+cmake ..
+cmake --build . --target node_addon
+```
+
+### Using a prebuilt `libobs`
+
+If you already built OBS yourself, simply run:
+
 ```
 npm install
 ```
-
-`libobs` must be built and available on your system. On Linux you can build
-it from this repository using CMake. On macOS you can use the Xcode project
-or CMake as well. Ensure `libobs` is discoverable by the linker.
 
 ## Testing
 
